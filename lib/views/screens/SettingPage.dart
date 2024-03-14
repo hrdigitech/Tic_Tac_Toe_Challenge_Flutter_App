@@ -2,8 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:tic_tac_toe/views/utils/ImageUtils.dart';
 import 'package:tic_tac_toe/views/utils/VariableUtils.dart';
+
+import '../helper/GoogleADHelper.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
@@ -13,6 +16,11 @@ class SettingPage extends StatefulWidget {
 }
 
 class _SettingPageState extends State<SettingPage> {
+  @override
+  void initState() {
+    GoogleAdsHelper.googleAdsHelper.showBannerAd();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height;
@@ -146,7 +154,7 @@ class _SettingPageState extends State<SettingPage> {
                       ),
                     ),
                     subtitle: Text(
-                      "Your app version :- 1.0.1",
+                      "Your app version :- 2.0.2",
                       style: GoogleFonts.raleway(
                         textStyle: TextStyle(
                           fontWeight: FontWeight.normal,
@@ -192,7 +200,7 @@ class _SettingPageState extends State<SettingPage> {
                 const Spacer(),
                 Center(
                   child: Text(
-                    "Manage By : HRDevCreations🇮🇳",
+                    "Manage By : HR DigiTech🇮🇳",
                     style: GoogleFonts.lato(
                       textStyle: TextStyle(
                         fontWeight: FontWeight.normal,
@@ -202,12 +210,16 @@ class _SettingPageState extends State<SettingPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: h * 0.03,),
               ],
             ),
           ),
         ],
+      ),bottomNavigationBar: SizedBox(
+      height: h * 0.06,
+      child: AdWidget(
+        ad: GoogleAdsHelper.googleAdsHelper.bannerAd!,
       ),
+    ),
     );
   }
 }

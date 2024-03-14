@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:tic_tac_toe/provider/TicTacToeGame.dart';
 import 'package:tic_tac_toe/views/utils/ColorUtils.dart';
 import 'package:tic_tac_toe/views/utils/ImageUtils.dart';
 import 'package:tic_tac_toe/views/utils/VariableUtils.dart';
 import 'package:tic_tac_toe/views/widgets/TicTactoeCell.dart';
+
+import '../helper/GoogleADHelper.dart';
 
 class RobotPlayerPage extends StatefulWidget {
   const RobotPlayerPage({super.key});
@@ -15,6 +18,12 @@ class RobotPlayerPage extends StatefulWidget {
 }
 
 class _RobotPlayerPageState extends State<RobotPlayerPage> {
+  @override
+  void initState() {
+    super.initState();
+    GoogleAdsHelper.googleAdsHelper.showBannerAd();
+    GoogleAdsHelper.googleAdsHelper.showInterstitialAd();
+  }
   @override
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height;
@@ -60,6 +69,8 @@ class _RobotPlayerPageState extends State<RobotPlayerPage> {
                     IconButton(
                       onPressed: () {
                         Navigator.of(context).pushNamed('SettingPage');
+                        GoogleAdsHelper.googleAdsHelper.interstitialAd!.show();
+                        GoogleAdsHelper.googleAdsHelper.showInterstitialAd();
                       },
                       icon: Icon(
                         Icons.settings,
@@ -83,12 +94,10 @@ class _RobotPlayerPageState extends State<RobotPlayerPage> {
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: h * 0.04,
-                ),
                 Padding(
-                  padding: EdgeInsets.all(
-                    h * 0.02,
+                  padding: EdgeInsets.only(
+                    left: h * 0.02,
+                    right: h * 0.02,
                   ),
                   child: Consumer<TicTacToeGame>(
                     builder: (context, game, child) {
@@ -173,7 +182,7 @@ class _RobotPlayerPageState extends State<RobotPlayerPage> {
                   ),
                 ),
                 SizedBox(
-                  height: h * 0.04,
+                  height: h * 0.03,
                 ),
                 Consumer<TicTacToeGame>(
                   builder: (context, game, child) {
@@ -208,11 +217,17 @@ class _RobotPlayerPageState extends State<RobotPlayerPage> {
                     }
                   },
                 ),
+                SizedBox(
+                  height: h * 0.02,
+                ),
                 const Spacer(),
                 InkWell(
                   onTap: () {
                     Provider.of<TicTacToeGame>(context, listen: false)
                         .restartGame();
+
+                    GoogleAdsHelper.googleAdsHelper.interstitialAd!.show();
+                    GoogleAdsHelper.googleAdsHelper.showInterstitialAd();
                   },
                   child: AnimatedContainer(
                     transform: Matrix4.identity()..scale(scale),
@@ -282,12 +297,18 @@ class _RobotPlayerPageState extends State<RobotPlayerPage> {
                   ),
                 ),
                 SizedBox(
-                  height: h * 0.04,
+                  height: h * 0.03,
                 ),
               ],
             ),
           ),
         ],
+      ),
+      bottomNavigationBar: SizedBox(
+        height: h * 0.06,
+        child: AdWidget(
+          ad: GoogleAdsHelper.googleAdsHelper.bannerAd!,
+        ),
       ),
     );
   }

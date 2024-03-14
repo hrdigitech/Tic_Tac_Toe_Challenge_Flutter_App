@@ -2,7 +2,7 @@ name: tic_tac_toe
 description: "A new Flutter project."
 publish_to: 'none'
 
-version: 1.0.1
+version: 2.0.2
 
 environment:
   sdk: '>=3.2.6 <4.0.0'
@@ -14,6 +14,7 @@ dependencies:
   provider:
   google_fonts:
   fluttertoast: ^8.2.4
+  google_mobile_ads:
 
 dev_dependencies:
   flutter_test:

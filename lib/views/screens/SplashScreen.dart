@@ -44,7 +44,7 @@ class SplashScreen extends StatelessWidget {
               height: h * 0.34,
             ),
             Text(
-              "Manage By : HRDevCreations🇮🇳",
+              "Manage By : HR DigiTech🇮🇳",
               style: GoogleFonts.lato(
                 textStyle: TextStyle(
                   fontWeight: FontWeight.normal,

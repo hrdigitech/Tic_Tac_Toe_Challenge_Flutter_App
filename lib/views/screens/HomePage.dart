@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:tic_tac_toe/views/utils/ColorUtils.dart';
 import 'package:tic_tac_toe/views/utils/ImageUtils.dart';
 import 'package:tic_tac_toe/views/utils/VariableUtils.dart';
+
+import '../helper/GoogleADHelper.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
@@ -12,6 +15,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    GoogleAdsHelper.googleAdsHelper.showBannerAd();
+    GoogleAdsHelper.googleAdsHelper.showInterstitialAd();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height;
@@ -39,7 +48,7 @@ class _HomePageState extends State<HomePage> {
                   height: h * 0.08,
                 ),
                 Container(
-                  height: h * 0.04,
+                  height: h * 0.05,
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       image: AssetImage(
@@ -53,7 +62,7 @@ class _HomePageState extends State<HomePage> {
                   height: h * 0.04,
                 ),
                 Container(
-                  height: h * 0.36,
+                  height: h * 0.42,
                   width: w * 0.8,
                   decoration: BoxDecoration(
                     border: Border.all(
@@ -224,105 +233,9 @@ class _HomePageState extends State<HomePage> {
                 ),
                 InkWell(
                   onTap: () {
-                    final snackBar = SnackBar(
-                      content: Row(
-                        children: [
-                          Image.asset(
-                            ImagePath + AppIcon,
-                            height: h * 0.02,
-                            width: w * 0.02,
-                          ),
-                          SizedBox(
-                            width: w * 0.03,
-                          ),
-                          const Text('Classic Game Launch Soon...'),
-                        ],
-                      ),
-                      duration: const Duration(seconds: 3),
-                      backgroundColor: Colors.black87,
-                      behavior: SnackBarBehavior.floating,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    );
-                    setState(() {
-
-                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                    });
-                  },
-                  child: AnimatedContainer(
-                    transform: Matrix4.identity()..scale(scale),
-                    duration: const Duration(milliseconds: 200),
-                    height: h * 0.06,
-                    width: w * 0.6,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(h * 0.05),
-                      gradient: LinearGradient(
-                        colors: [
-                          AppColors.kPrimary,
-                          AppColors.kBlack,
-                        ],
-                      ),
-                      boxShadow: glowing
-                          ? [
-                              BoxShadow(
-                                color: AppColors.kPrimary.withOpacity(0.6),
-                                spreadRadius: w * 0.002,
-                                blurRadius: h * 0.032,
-                                offset: Offset(-w * 0.04, 0),
-                              ),
-                              BoxShadow(
-                                color: AppColors.kBlack.withOpacity(0.6),
-                                spreadRadius: w * 0.002,
-                                blurRadius: h * 0.032,
-                                offset: Offset(w * 0.04, 0),
-                              ),
-                              BoxShadow(
-                                color: AppColors.kPrimary.withOpacity(0.2),
-                                spreadRadius: h * 0.032,
-                                blurRadius: h * 0.064,
-                                offset: Offset(-w * 0.04, 0),
-                              ),
-                              BoxShadow(
-                                color: AppColors.kBlack.withOpacity(0.2),
-                                spreadRadius: h * 0.032,
-                                blurRadius: h * 0.064,
-                                offset: Offset(w * 0.04, 0),
-                              ),
-                            ]
-                          : [],
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(
-                          Icons.gamepad,
-                          color: Colors.white,
-                        ),
-                        SizedBox(
-                          width: w * 0.04,
-                        ),
-                        Text(
-                          "Classic",
-                          style: GoogleFonts.lato(
-                            textStyle: TextStyle(
-                              color: Colors.white,
-                              fontSize: h * 0.024,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: h * 0.03,
-                ),
-                InkWell(
-                  onTap: () {
                     Navigator.of(context).pushNamed('SettingPage');
+                    GoogleAdsHelper.googleAdsHelper.interstitialAd!.show();
+                    GoogleAdsHelper.googleAdsHelper.showInterstitialAd();
                   },
                   child: AnimatedContainer(
                     transform: Matrix4.identity()..scale(scale),
@@ -394,6 +307,12 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ],
+        ),
+      ),
+      bottomNavigationBar: SizedBox(
+        height: h * 0.06,
+        child: AdWidget(
+          ad: GoogleAdsHelper.googleAdsHelper.bannerAd!,
         ),
       ),
     );

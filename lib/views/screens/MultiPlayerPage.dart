@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:tic_tac_toe/provider/TicTacToeGame.dart';
+import 'package:tic_tac_toe/views/helper/GoogleADHelper.dart';
 import 'package:tic_tac_toe/views/utils/ColorUtils.dart';
 import 'package:tic_tac_toe/views/utils/ImageUtils.dart';
 import 'package:tic_tac_toe/views/utils/VariableUtils.dart';
@@ -15,6 +17,12 @@ class MultiPlayerPage extends StatefulWidget {
 }
 
 class _MultiPlayerPageState extends State<MultiPlayerPage> {
+  @override
+  void initState() {
+    GoogleAdsHelper.googleAdsHelper.showInterstitialAd();
+    GoogleAdsHelper.googleAdsHelper.showBannerAd();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height;
@@ -60,6 +68,8 @@ class _MultiPlayerPageState extends State<MultiPlayerPage> {
                     IconButton(
                       onPressed: () {
                         Navigator.of(context).pushNamed('SettingPage');
+                        GoogleAdsHelper.googleAdsHelper.interstitialAd!.show();
+                        GoogleAdsHelper.googleAdsHelper.showInterstitialAd();
                       },
                       icon: Icon(
                         Icons.settings,
@@ -83,12 +93,10 @@ class _MultiPlayerPageState extends State<MultiPlayerPage> {
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: h * 0.04,
-                ),
                 Padding(
-                  padding: EdgeInsets.all(
-                    h * 0.02,
+                  padding: EdgeInsets.only(
+                    left: h * 0.02,
+                    right: h * 0.02,
                   ),
                   child: Consumer<TicTacToeGame>(
                     builder: (context, game, child) {
@@ -210,6 +218,8 @@ class _MultiPlayerPageState extends State<MultiPlayerPage> {
                   onTap: () {
                     Provider.of<TicTacToeGame>(context, listen: false)
                         .restartGame();
+                    GoogleAdsHelper.googleAdsHelper.interstitialAd!.show();
+                    GoogleAdsHelper.googleAdsHelper.showInterstitialAd();
                   },
                   child: AnimatedContainer(
                     transform: Matrix4.identity()..scale(scale),
@@ -279,12 +289,18 @@ class _MultiPlayerPageState extends State<MultiPlayerPage> {
                   ),
                 ),
                 SizedBox(
-                  height: h * 0.04,
+                  height: h * 0.02,
                 ),
               ],
             ),
           ),
         ],
+      ),
+      bottomNavigationBar: SizedBox(
+        height: h * 0.06,
+        child: AdWidget(
+          ad: GoogleAdsHelper.googleAdsHelper.bannerAd!,
+        ),
       ),
     );
   }
