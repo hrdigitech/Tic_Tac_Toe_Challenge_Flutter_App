@@ -24,6 +24,7 @@ class _RobotPlayerPageState extends State<RobotPlayerPage> {
     GoogleAdsHelper.googleAdsHelper.showBannerAd();
     GoogleAdsHelper.googleAdsHelper.showInterstitialAd();
   }
+
   @override
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height;
@@ -58,6 +59,8 @@ class _RobotPlayerPageState extends State<RobotPlayerPage> {
                     IconButton(
                       onPressed: () {
                         Navigator.of(context).pop();
+                        Provider.of<TicTacToeGame>(context, listen: false)
+                            .restartGame();
                       },
                       icon: Icon(
                         Icons.arrow_back,
@@ -69,6 +72,8 @@ class _RobotPlayerPageState extends State<RobotPlayerPage> {
                     IconButton(
                       onPressed: () {
                         Navigator.of(context).pushNamed('SettingPage');
+                        Provider.of<TicTacToeGame>(context, listen: false)
+                            .restartGame();
                         GoogleAdsHelper.googleAdsHelper.interstitialAd!.show();
                         GoogleAdsHelper.googleAdsHelper.showInterstitialAd();
                       },

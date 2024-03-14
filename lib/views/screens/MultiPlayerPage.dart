@@ -57,6 +57,8 @@ class _MultiPlayerPageState extends State<MultiPlayerPage> {
                     IconButton(
                       onPressed: () {
                         Navigator.of(context).pop();
+                        Provider.of<TicTacToeGame>(context, listen: false)
+                            .restartGame();
                       },
                       icon: Icon(
                         Icons.arrow_back,
@@ -68,6 +70,8 @@ class _MultiPlayerPageState extends State<MultiPlayerPage> {
                     IconButton(
                       onPressed: () {
                         Navigator.of(context).pushNamed('SettingPage');
+                        Provider.of<TicTacToeGame>(context, listen: false)
+                            .restartGame();
                         GoogleAdsHelper.googleAdsHelper.interstitialAd!.show();
                         GoogleAdsHelper.googleAdsHelper.showInterstitialAd();
                       },
