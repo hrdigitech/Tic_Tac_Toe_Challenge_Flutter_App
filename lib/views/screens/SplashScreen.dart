@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../utils/ImageUtils.dart';
 
@@ -8,7 +9,7 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Timer(const Duration(seconds: 4), () {
-      Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+      Get.offAllNamed('/');
     });
     double h = MediaQuery.of(context).size.height;
     return Scaffold(

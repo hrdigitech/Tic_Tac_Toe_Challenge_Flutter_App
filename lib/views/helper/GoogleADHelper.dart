@@ -72,7 +72,6 @@ class GoogleAdsHelper {
           log("AppOpenAd failed to load: $error");
         },
       ),
-      orientation: AppOpenAd.orientationPortrait,
     );
   }
 

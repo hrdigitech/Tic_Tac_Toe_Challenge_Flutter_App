@@ -1,11 +1,10 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:tic_tac_toe/views/utils/ImageUtils.dart';
-import 'package:tic_tac_toe/views/utils/VariableUtils.dart';
-
+import '../../provider/SettingController.dart';
 import '../helper/GoogleADHelper.dart';
 
 class SettingPage extends StatefulWidget {
@@ -21,6 +20,10 @@ class _SettingPageState extends State<SettingPage> {
     GoogleAdsHelper.googleAdsHelper.showBannerAd();
     super.initState();
   }
+
+  final SettingsController settingsController =
+      Get.put(SettingsController()); // Initialize controller
+
   @override
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height;
@@ -94,50 +97,18 @@ class _SettingPageState extends State<SettingPage> {
                         ),
                       ),
                     ),
-                    trailing: IconButton(
-                      onPressed: () {
-                        setState(() {
-                          Volume = !Volume;
-                        });
-                      },
-                      icon: Icon(
-                        Volume ? Icons.volume_down : Icons.volume_off,
-                        size: h * 0.04,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                ),
-                Card(
-                  child: ListTile(
-                    title: Text(
-                      "Vibrate",
-                      style: GoogleFonts.lato(
-                        textStyle: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: h * 0.024,
+                    trailing: Obx(
+                      () => IconButton(
+                        onPressed: () {
+                          settingsController.toggleVolume();
+                        },
+                        icon: Icon(
+                          settingsController.isVolumeOn.value
+                              ? Icons.volume_down
+                              : Icons.volume_off,
+                          size: h * 0.04,
+                          color: Colors.black,
                         ),
-                      ),
-                    ),
-                    subtitle: Text(
-                      "You can change the vibration in your device.",
-                      style: GoogleFonts.raleway(
-                        textStyle: TextStyle(
-                          fontWeight: FontWeight.normal,
-                          fontSize: h * 0.016,
-                        ),
-                      ),
-                    ),
-                    trailing: IconButton(
-                      onPressed: () {
-                        setState(() {
-                          Vibration = !Vibration;
-                        });
-                      },
-                      icon: Icon(
-                        Vibration ? Icons.vibration : Icons.phone_android,
-                        size: h * 0.04,
-                        color: Colors.black,
                       ),
                     ),
                   ),
@@ -154,7 +125,7 @@ class _SettingPageState extends State<SettingPage> {
                       ),
                     ),
                     subtitle: Text(
-                      "Your app version :- 2.0.2",
+                      "Your app version :- 3.0.6",
                       style: GoogleFonts.raleway(
                         textStyle: TextStyle(
                           fontWeight: FontWeight.normal,
@@ -194,7 +165,6 @@ class _SettingPageState extends State<SettingPage> {
                         color: Colors.black,
                       ),
                     ),
-
                   ),
                 ),
                 const Spacer(),
@@ -214,12 +184,13 @@ class _SettingPageState extends State<SettingPage> {
             ),
           ),
         ],
-      ),bottomNavigationBar: SizedBox(
-      height: h * 0.06,
-      child: AdWidget(
-        ad: GoogleAdsHelper.googleAdsHelper.bannerAd!,
       ),
-    ),
+      bottomNavigationBar: SizedBox(
+        height: h * 0.06,
+        child: AdWidget(
+          ad: GoogleAdsHelper.googleAdsHelper.bannerAd!,
+        ),
+      ),
     );
   }
 }

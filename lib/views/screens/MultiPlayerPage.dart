@@ -1,32 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:provider/provider.dart';
-import 'package:tic_tac_toe/provider/TicTacToeGame.dart';
+import 'package:get/get.dart';
 import 'package:tic_tac_toe/views/helper/GoogleADHelper.dart';
 import 'package:tic_tac_toe/views/utils/ColorUtils.dart';
 import 'package:tic_tac_toe/views/utils/ImageUtils.dart';
 import 'package:tic_tac_toe/views/utils/VariableUtils.dart';
 import 'package:tic_tac_toe/views/widgets/TicTactoeCell.dart';
+import '../../provider/TicTacToeGameController.dart';
 
 class MultiPlayerPage extends StatefulWidget {
-  const MultiPlayerPage({Key? key}) : super(key: key);
+  MultiPlayerPage({Key? key}) : super(key: key);
 
   @override
-  _MultiPlayerPageState createState() => _MultiPlayerPageState();
+  State<MultiPlayerPage> createState() => _MultiPlayerPageState();
 }
 
 class _MultiPlayerPageState extends State<MultiPlayerPage> {
+  final TicTacToeGameController _gameController = Get.put(
+    TicTacToeGameController(Get.find()),
+  );
+
   @override
   void initState() {
-    GoogleAdsHelper.googleAdsHelper.showInterstitialAd();
-    GoogleAdsHelper.googleAdsHelper.showBannerAd();
     super.initState();
+    GoogleAdsHelper.googleAdsHelper.showBannerAd();
   }
+
   @override
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
+
     return Scaffold(
       body: Stack(
         children: [
@@ -57,8 +62,7 @@ class _MultiPlayerPageState extends State<MultiPlayerPage> {
                     IconButton(
                       onPressed: () {
                         Navigator.of(context).pop();
-                        Provider.of<TicTacToeGame>(context, listen: false)
-                            .restartGame();
+                        _gameController.restartGame();
                       },
                       icon: Icon(
                         Icons.arrow_back,
@@ -70,8 +74,7 @@ class _MultiPlayerPageState extends State<MultiPlayerPage> {
                     IconButton(
                       onPressed: () {
                         Navigator.of(context).pushNamed('SettingPage');
-                        Provider.of<TicTacToeGame>(context, listen: false)
-                            .restartGame();
+                        _gameController.restartGame();
                         GoogleAdsHelper.googleAdsHelper.interstitialAd!.show();
                         GoogleAdsHelper.googleAdsHelper.showInterstitialAd();
                       },
@@ -102,23 +105,24 @@ class _MultiPlayerPageState extends State<MultiPlayerPage> {
                     left: h * 0.02,
                     right: h * 0.02,
                   ),
-                  child: Consumer<TicTacToeGame>(
-                    builder: (context, game, child) {
-                      return GridView.builder(
-                        shrinkWrap: true,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          crossAxisSpacing: 8.0,
-                          mainAxisSpacing: 8.0,
-                        ),
-                        itemCount: 9,
-                        itemBuilder: (context, index) {
+                  child: GridView.builder(
+                    shrinkWrap: true,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      crossAxisSpacing: 8.0,
+                      mainAxisSpacing: 8.0,
+                    ),
+                    itemCount: 9,
+                    itemBuilder: (context, index) {
+                      return Obx(
+                        () {
                           return GestureDetector(
                             onTap: () {
-                              if (!game.isGameOver &&
-                                  game.board[index] == TicTacToeCell.empty) {
-                                game.playMove(index);
+                              if (!_gameController.isGameOver.value &&
+                                  _gameController.board[index] ==
+                                      TicTacToeCell.empty) {
+                                _gameController.playMove(index);
                               }
                             },
                             child: Container(
@@ -165,10 +169,11 @@ class _MultiPlayerPageState extends State<MultiPlayerPage> {
                               ),
                               child: Center(
                                 child: Text(
-                                  game.board[index].symbol,
+                                  _gameController.board[index].symbol,
                                   style: TextStyle(
                                     fontSize: 40.0,
-                                    color: game.board[index] == TicTacToeCell.x
+                                    color: _gameController.board[index] ==
+                                            TicTacToeCell.x
                                         ? Colors.red
                                         : Colors.green,
                                   ),
@@ -184,19 +189,19 @@ class _MultiPlayerPageState extends State<MultiPlayerPage> {
                 SizedBox(
                   height: h * 0.04,
                 ),
-                Consumer<TicTacToeGame>(
-                  builder: (context, game, child) {
-                    if (game.isGameOver) {
+                Obx(
+                  () {
+                    if (_gameController.isGameOver.value) {
                       String imagePath;
                       String message;
 
-                      if (game.resultMessage == 'O wins!') {
+                      if (_gameController.resultMessage == 'O wins!') {
                         imagePath = ImagePath + Owon;
                         message = 'O Wins!';
-                      } else if (game.resultMessage == 'X wins!') {
+                      } else if (_gameController.resultMessage == 'X wins!') {
                         imagePath = ImagePath + Xwon;
                         message = 'X Wins!';
-                      } else if (game.resultMessage == 'Draw!') {
+                      } else if (_gameController.resultMessage == 'Draw!') {
                         imagePath = ImagePath + DrawGame;
                         message = 'It\'s a Draw!';
                       } else {
@@ -220,10 +225,12 @@ class _MultiPlayerPageState extends State<MultiPlayerPage> {
                 const Spacer(),
                 InkWell(
                   onTap: () {
-                    Provider.of<TicTacToeGame>(context, listen: false)
-                        .restartGame();
-                    GoogleAdsHelper.googleAdsHelper.interstitialAd!.show();
-                    GoogleAdsHelper.googleAdsHelper.showInterstitialAd();
+                    _gameController.restartGame();
+
+                    if (_gameController.restartCounter % 3 == 0) {
+                      GoogleAdsHelper.googleAdsHelper.interstitialAd!.show();
+                      GoogleAdsHelper.googleAdsHelper.showInterstitialAd();
+                    }
                   },
                   child: AnimatedContainer(
                     transform: Matrix4.identity()..scale(scale),

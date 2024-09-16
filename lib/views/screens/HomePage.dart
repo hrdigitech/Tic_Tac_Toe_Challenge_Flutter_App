@@ -18,7 +18,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     GoogleAdsHelper.googleAdsHelper.showBannerAd();
-    GoogleAdsHelper.googleAdsHelper.showInterstitialAd();
     super.initState();
   }
   @override
@@ -234,8 +233,6 @@ class _HomePageState extends State<HomePage> {
                 InkWell(
                   onTap: () {
                     Navigator.of(context).pushNamed('SettingPage');
-                    GoogleAdsHelper.googleAdsHelper.interstitialAd!.show();
-                    GoogleAdsHelper.googleAdsHelper.showInterstitialAd();
                   },
                   child: AnimatedContainer(
                     transform: Matrix4.identity()..scale(scale),
